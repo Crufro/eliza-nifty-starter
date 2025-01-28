@@ -21,6 +21,7 @@ import {
 } from "@ai16z/eliza";
 import { bootstrapPlugin } from "@ai16z/plugin-bootstrap";
 import { solanaPlugin } from "@ai16z/plugin-solana";
+import { nodePlugin } from "@ai16z/plugin-node";
 import Database from "better-sqlite3";
 import fs from "fs";
 import readline from "readline";
@@ -29,7 +30,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { character } from "./character.ts";
 import type { DirectClient } from "@ai16z/client-direct";
-import { hostLobby } from "../hostLobby.ts";
 
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
@@ -170,6 +170,7 @@ export async function initializeClients(
     if (autoClient) clients.push(autoClient);
   }
 
+
   if (character.plugins?.length > 0) {
     for (const plugin of character.plugins) {
       if (plugin.clients) {
@@ -202,10 +203,11 @@ export function createAgent(
     character,
     plugins: [
       bootstrapPlugin,
+      nodePlugin,
       character.settings.secrets?.WALLET_PUBLIC_KEY ? solanaPlugin : null,
     ].filter(Boolean),
     providers: [],
-    actions: [hostLobby],
+    actions: [],
     services: [],
     managers: [],
     cacheManager: cache,
